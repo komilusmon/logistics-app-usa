@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { StateSearchBar } from './components/StateSearchBar';
+import { GoogleMapsViewer } from './components/GoogleMapsViewer';
 import { UsMapViewer } from './components/UsMapViewer';
 import { StateDetailCard } from './components/StateDetailCard';
 import { StateDirectory } from './components/StateDirectory';
@@ -8,16 +9,16 @@ import { DispatcherQuiz } from './components/DispatcherQuiz';
 import { RoutePlanner } from './components/RoutePlanner';
 import { US_STATES, STATES_BY_ID } from './data/states';
 import { StateData } from './types/state';
-import { Map, BookOpen, Award, Navigation, Heart, ExternalLink } from 'lucide-react';
+import { Map, BookOpen, Award, Navigation, Globe, Radio, Layers } from 'lucide-react';
 
 export default function App() {
   // Default selected state is Texas (TX) - the heart of US freight
   const [selectedState, setSelectedState] = useState<StateData>(STATES_BY_ID.get('TX') || US_STATES[0]);
   const [activeTab, setActiveTab] = useState<'map' | 'directory' | 'quiz' | 'route'>('map');
+  const [mapEngine, setMapEngine] = useState<'google' | 'svg'>('google');
 
   const handleStateSelect = (state: StateData) => {
     setSelectedState(state);
-    // If user is on another tab, we can let them inspect on map
     if (activeTab !== 'map' && activeTab !== 'directory') {
       setActiveTab('map');
     }
@@ -106,11 +107,59 @@ export default function App() {
               selectedState={selectedState}
             />
 
-            {/* Interactive US SVG Map */}
-            <UsMapViewer
-              selectedState={selectedState}
-              onSelectState={setSelectedState}
-            />
+            {/* Map Engine Mode Switcher */}
+            <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
+                  <Globe className="w-4 h-4 text-emerald-400" />
+                  Xarita Turi:
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setMapEngine('google')}
+                    className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                      mapEngine === 'google'
+                        ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
+                        : 'bg-slate-950 text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <Radio className="w-3.5 h-3.5" />
+                    <span>Google Maps (Jonli Tirbandlik & Sun'iy Yo'ldosh)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setMapEngine('svg')}
+                    className={`px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                      mapEngine === 'svg'
+                        ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/25'
+                        : 'bg-slate-950 text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>Sxematik Logistika Xaritasi (Magistrallar & Hududlar)</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="text-[11px] text-slate-400">
+                {mapEngine === 'google' ? 'Google Maps JavaScript API faol' : 'SVG Vektorli xarita faol'}
+              </div>
+            </div>
+
+            {/* Map View Display */}
+            {mapEngine === 'google' ? (
+              <GoogleMapsViewer
+                selectedState={selectedState}
+                onSelectState={setSelectedState}
+              />
+            ) : (
+              <UsMapViewer
+                selectedState={selectedState}
+                onSelectState={setSelectedState}
+              />
+            )}
 
             {/* Full Logistics Sheet for the State */}
             {selectedState && (
@@ -177,7 +226,7 @@ export default function App() {
           </div>
 
           <div className="text-slate-500 text-[11px]">
-            50 ta Shtat + 6 ta Hudud (AL dan WY, PR, GU, VI, MP, AS, TT gacha)
+            50 ta Shtat + 6 ta Hudud • Google Maps Platform Powered
           </div>
         </div>
       </footer>
