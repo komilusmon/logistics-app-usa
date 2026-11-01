@@ -1,0 +1,6 @@
+{
+  "name": "US Logistics States & Dispatcher Navigator",
+  "description": "Logistika va dispetcherlar uchun AQSh shtatlari qisqartmalari, xarita joylashuvi, vaqt zonalari va yuk magistrallari qo'llanmasi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
