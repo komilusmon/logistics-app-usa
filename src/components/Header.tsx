@@ -58,7 +58,7 @@ export const Header: React.FC = () => {
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                AQSh shtatlari qisqartmalari, yuk magistrallari, vaqt zonalari va interaktiv xaritasi
+                Real chegaralar • Savol-javob • Fura yo'l qidiruv (kenglik / balandlik / burilish)
               </p>
             </div>
           </div>

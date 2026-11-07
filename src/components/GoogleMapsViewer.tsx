@@ -78,8 +78,8 @@ export const GoogleMapsViewer: React.FC<GoogleMapsViewerProps> = ({
 }) => {
   const apiKey =
     propApiKey ||
-    import.meta.env.VITE_GOOGLE_MAPS_API_KEY ||
-    'AIzaSyCKd4xU7EUxiUw2475Aw36SRWtQsJdZ-mE';
+    (import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined) ||
+    '';
 
   const [mapType, setMapType] = useState<string>('roadmap');
   const [showTraffic, setShowTraffic] = useState<boolean>(true);
@@ -99,6 +99,23 @@ export const GoogleMapsViewer: React.FC<GoogleMapsViewerProps> = ({
       onSelectState(selectedState);
     }
   };
+
+  if (!apiKey) {
+    return (
+      <div className="relative w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-2xl">
+        <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-100">
+          <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+          <div className="text-sm space-y-1">
+            <div className="font-bold text-amber-300">Google Maps API kaliti topilmadi</div>
+            <p className="text-slate-300 text-xs leading-relaxed">
+              Vercel Environment Variables ga <code className="font-mono text-amber-200">VITE_GOOGLE_MAPS_API_KEY</code> qo&apos;shing.
+              Real chegaralar xaritasi kalitsiz ishlaydi — yuqoridan &quot;Real Chegaralar&quot; rejimini tanlang.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-4 lg:p-6 shadow-2xl backdrop-blur-md">
